@@ -1,11 +1,277 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="UTF-8">
-  <title>GitHub Pages Test</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>めざせ！納豆マスター</title>
+
+<style>
+:root{
+  --bg:#fbf8ef;
+  --main:#8b6a31;
+  --card:#ffffff;
+  --text:#2b2b2b;
+}
+
+body{
+  margin:0;
+  font-family:"Hiragino Sans","Yu Gothic",Inter,Helvetica,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+header{
+  background:linear-gradient(135deg,#8b6a31,#b89a54);
+  color:#fff;
+  text-align:center;
+  padding:20px;
+  font-size:26px;
+  font-weight:700;
+  position:sticky;
+  top:0;
+  z-index:20;
+}
+
+.container{
+  max-width:1280px;
+  margin:auto;
+  padding:20px;
+}
+
+/* 翻訳バー */
+.translate-bar{
+  text-align:center;
+  margin-bottom:20px;
+}
+.translate-bar button{
+  background:#8b6a31;
+  color:#fff;
+  border:none;
+  border-radius:999px;
+  padding:8px 18px;
+  margin:4px;
+  cursor:pointer;
+  font-weight:600;
+}
+
+/* 商品一覧 */
+.choice-list{
+  display:grid;
+  grid-template-columns:repeat(6,1fr);
+  gap:18px;
+}
+
+.choice{
+  background:var(--card);
+  border-radius:18px;
+  padding:14px;
+  box-shadow:0 10px 30px rgba(0,0,0,.08);
+  cursor:pointer;
+  text-align:center;
+}
+.choice:hover{transform:translateY(-4px)}
+
+.choice img{
+  width:100%;
+  height:120px;
+  object-fit:contain;
+  background:#f5f1e6;
+  border-radius:12px;
+}
+
+.choice .noimg{
+  height:120px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#f5f1e6;
+  border-radius:12px;
+  color:#8b6a31;
+  font-weight:600;
+}
+
+/* 比較 */
+.compare{display:none;margin-top:24px}
+.compare-row{
+  display:flex;
+  flex-direction:column;
+  gap:24px;
+}
+
+.box{
+  background:#fff;
+  border-radius:20px;
+  padding:20px;
+  box-shadow:0 10px 30px rgba(0,0,0,.1);
+}
+
+.box-inner{display:flex;gap:18px}
+.box img{
+  width:200px;
+  height:200px;
+  object-fit:contain;
+  background:#f5f1e6;
+  border-radius:14px;
+}
+.box p{white-space:pre-wrap;line-height:1.8}
+
+.back{
+  background:#8b6a31;
+  color:#fff;
+  border:none;
+  border-radius:999px;
+  padding:10px 20px;
+  cursor:pointer;
+  margin-bottom:20px;
+}
+
+@media(max-width:1100px){
+  .choice-list{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:640px){
+  .choice-list{grid-template-columns:repeat(2,1fr)}
+  .box-inner{flex-direction:column}
+  .box img{width:100%;height:180px}
+}
+</style>
 </head>
+
 <body>
-  <h1>表示成功！🎉</h1>
-  <p>index.html は正しく設置されています。</p>
+
+<header>めざせ！納豆マスター</header>
+
+<!-- 翻訳ボタン -->
+<div class="translate-bar">
+  <button onclick="changeLang('ja')">日本語</button>
+  <button onclick="changeLang('en')">English</button>
+  <button onclick="changeLang('zh-CN')">中文</button>
+  <button onclick="changeLang('ko')">한국어</button>
+  <button onclick="changeLang('vi')">Tiếng Việt</button>
+</div>
+
+<div id="google_translate_element" style="display:none"></div>
+
+<div class="container">
+<button class="back" onclick="back()">戻る</button>
+
+<div id="list" class="choice-list"></div>
+
+<div id="compare" class="compare">
+  <div class="compare-row">
+
+    <!-- 選択商品 -->
+    <div class="box">
+      <div class="box-inner">
+        <img id="selImg">
+        <div>
+          <h3 id="selTitle"></h3>
+          <p id="selDesc"></p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 薬日本堂 -->
+    <div class="box">
+      <div class="box-inner">
+        <img src="https://github.com/mtdyt0409-del/shinnakamise/blob/main/%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89.jpg?raw=true">
+        <div>
+          <h3>薬日本堂 納豆キナーゼ10000FU</h3>
+          <p>
+内容量: 90粒(30日分)  1日目安量（3粒）あたり10000FU
+販売価格:（税込）20,000円 1日あたり(税抜)約667円 (20,000円 ÷ 30日)
+配合成分:納豆菌培養エキス末（国産ナットウキナーゼ）、ルンブルクス末、ケイヒ末、ハトムギ末、
+ヒュウガトウキ茎葉末、リュウガンニクエキス末
+特徴:国産ナットウキナーゼ＋ルンブルクス配合。血栓の原因物質であるフィブリンを溶解する納豆キナーゼとルンブルクスが配合されている。納豆キナーゼは胃酸に弱いため、耐酸性カプセルを使用し吸収をサポートしている。血液を固める作用があるビタミンK2を除去しているため、優れた血栓溶解作用が期待できる。          </p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</div>
+
+<script>
+const products=[
+ {title:"野口サプリ 納豆キナーゼHQ",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/HQ.jpg?raw=true",desc:`内容量:120粒(30日分) 1日目安量（4粒）あたり4000FU
+販売価格:（税込）5,980円 1日あたり(税抜)約215円 (5,980円 ÷ 30日)
+配合成分: アマニ油（ベルギー製造）、ナットウキナーゼ含有納豆菌培養エキス（大豆粉、マルトデキストリン）、でん粉、タマネギ外皮エキス、ビール酵母、黒コショウ抽出物
+特徴:納豆のネバネバに含まれる酵素「ナットウキナーゼ」を、より多く（4,000FU）摂りたい方におすすめされています。`},
+ {title:"野口サプリ 納豆キナーゼEX",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/natto-kinase-ex_hako.jpg?raw=true",desc:`内容量: 90粒(30日分) 1日目安量（3粒）あたり3000FU
+販売価格:（税込）4,980円 1日あたり(税抜)約166円 (4,980円 ÷ 30日)
+配合成分:納豆キナーゼ含有納豆菌培養エキス末、ビール酵母、黒コショウエキス末、ケルセチン含有タマネギ外皮エキス末
+特徴:ビタミンKを除去している。`},
+ {title:"野口サプリ 納豆キナーゼ",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/normal.jpg?raw=true",desc:`内容量: 60粒（30日分）1日目安量（2粒）あたり2000FU
+販売価格:（税込）4,298円 1日あたり約143円（4,298円 ÷ 30日）
+配合成分:トウモロコシデンプン（国内製造）、マルトデキストリン、ナットウキナーゼ含有納豆菌培養エキス末（大豆粉、マルトデキストリン）、ビール酵母、黒コショウエキス末、ケルセチン含有タマネギ外皮エキス末／カプセル（ゼラチン）
+特徴: 日本の伝統食品「納豆」のネバネバに含まれる酵素「ナットウキナーゼ」を2,000FU摂取できるサプリメント。ビタミンKを除去したナットウキナーゼを使用し、「巡る納豆パワー2パック分」に相当。`},
+ {title:"オリヒロ ナットウキナーゼ",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/orihiro2000.jpg?raw=true",desc:`内容量: 60粒（20日分）1日目安量（3粒）あたり2000FU
+販売価格:（税込）3,240円 1日あたり約162円（3,240円 ÷ 20日）
+配合成分:大豆油（国内製造）、納豆菌培養エキス末（デキストリン、納豆菌培養エキス）／ゼラチン、グリセリン、グリセリン脂肪酸エステル、ミツロウ、レシチン（大豆由来）、ウコン色素。
+特徴:ナットウキナーゼ活性を持つ納豆菌培養エキスをソフトカプセル化したサプリメント。納豆特有の臭いを抑えており、健康管理や毎日の健康維持を目的として選ばれています。`},
+ {title:"オリヒロ ナットウキナーゼ4000",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/orihiro4000.jpg?raw=true",desc:`内容量: 60粒（30日分）1日目安量（2粒）あたり4000FU
+販売価格:（税込）4,320円 1日あたり約144円（4,320円 ÷ 30日）
+配合成分:納豆菌培養エキス末（台湾製造）、DHA含有精製魚油、サフラワー油、GABA、ビタミンE含有植物油／加工デンプン、グリセリン、ゲル化剤（増粘多糖類）、乳化剤、ミツロウ、レシチン、ルチン、カカオ色素、ヘスペリジン
+特徴:ナットウキナーゼ活性を持つ納豆菌培養エキスをソフトカプセルにしたサプリメント。DHA・EPA・ヘスペリジン・レシチンなども配合され、生活習慣が気になる方の健康管理をサポートします。`},
+ {title:"小林製薬 ナットウキナーゼ EPA DHA",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/EPADHA.jpg?raw=true",desc:`内容量: 30粒（30日分）1日目安量（1粒）あたり2000FU
+販売価格:（税抜）1,575円 1日あたり約52.5円（1,575円 ÷ 30日）
+配合成分:ゼラチン（国内製造）、DHA含有精製魚油、難消化性デキストリン、ナットウキナーゼ含有納豆菌培養エキス（大豆を含む）、玉ねぎ、大豆油、EPA含有精製魚油／グリセリン、酵素処理ルチン、ミツロウ、グリセリン脂肪酸エステル、レシチン（大豆由来）、フィチン酸、酸化防止剤（ビタミンE）、微粒酸化ケイ素
+特徴:健康系サプリメント（小林製薬）として販売される、ナットウキナーゼ・EPA・DHAを摂取できるソフトカプセル。納豆臭を抑えたナットウキナーゼ含有納豆菌培養エキスを使用し、ビタミンKも製造工程で除去されています。1日1粒でEPA11mg・DHA60mgを含み、サラサラなナットウキナーゼ 配合。`},
+ {title:"小林製薬 ナットウキナーゼ さらさら粒",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/sarasara.jpg?raw=true",desc:`内容量: 60粒（30日分）1日目安量（2粒）あたり2000FU
+販売価格:（税抜）2,625円 1日あたり約87.5円（2,625円 ÷ 30日）
+配合成分:ゼラチン（国内製造）、DHA含有精製魚油、大豆油、イワシペプチド、杜仲葉エキス、ナットウキナーゼ含有納豆菌培養エキス（大豆を含む）、難消化性デキストリン、EPA含有精製魚油、玉ねぎ ほか
+特徴:小林製薬の機能性表示食品。納豆菌由来ナットウキナーゼ、EPA、DHAをバランス良く配合し、末梢の血流改善を通じて「血圧が高めの方（正常高値：130〜139／85〜89mmHg）」の血圧低下をサポートします。1日2粒のソフトカプセルで、軽減税率対象商品です。`},
+ {title:"小林製薬 ナットウキナーゼ 中性脂肪",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/tyuuseisibou.jpg?raw=true",desc:`内容量:120粒（20日分）1日目安量（6粒）あたり2000FU
+販売価格:（税抜）2,940円 1日あたり約147円（2,940円 ÷ 20日）
+配合成分:EPA・DHA含有精製魚油（国内製造）、ゼラチン、大豆油、ナットウキナーゼ含有納豆菌培養エキス（大豆を含む）、難消化性デキストリン、ビタミンE含有植物油、グリセリン、ミツロウ、グリセリン脂肪酸エステル、ビタミンC、フィチン酸、酸化防止剤（ビタミンE）
+特徴:納豆菌由来ナットウキナーゼ、EPA、DHA、ビタミンC・Eを高配合し、末梢の血流を改善することで「血圧が高めの方（正常高値：130〜139／85〜89mmHg）」の血圧低下をサポートします。`},
+ {title:"準備中",img:"",desc:"準備中"},
+ {title:"準備中",img:"",desc:"準備中"},
+ {title:"準備中",img:"",desc:"準備中"},
+ {title:"準備中",img:"",desc:"準備中"}
+];
+
+const list=document.getElementById("list");
+const compare=document.getElementById("compare");
+
+products.forEach(p=>{
+  const d=document.createElement("div");
+  d.className="choice";
+  d.innerHTML=p.img
+    ? `<img src="${p.img}"><p>${p.title}</p>`
+    : `<div class="noimg">準備中</div><p>${p.title}</p>`;
+  d.onclick=()=>{
+    selImg.src=p.img||"";
+    selTitle.innerText=p.title;
+    selDesc.innerText=p.desc;
+    list.style.display="none";
+    compare.style.display="block";
+  };
+  list.appendChild(d);
+});
+
+function back(){
+  compare.style.display="none";
+  list.style.display="grid";
+}
+
+/* Google翻訳 */
+function googleTranslateElementInit(){
+  new google.translate.TranslateElement({
+    pageLanguage:'ja',
+    includedLanguages:'ja,en,zh-CN,ko,vi',
+    autoDisplay:false
+  }, 'google_translate_element');
+}
+
+function changeLang(lang){
+  const select=document.querySelector("select.goog-te-combo");
+  if(!select){ alert("翻訳初期化中"); return; }
+  select.value=lang;
+  select.dispatchEvent(new Event("change"));
+}
+</script>
+
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 </body>
 </html>
