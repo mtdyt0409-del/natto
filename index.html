@@ -38,9 +38,7 @@ header{
   font-size:28px;
   font-weight:700;
   letter-spacing:2px;
-  text-shadow:
-    0 2px 0 rgba(0,0,0,.2),
-    0 6px 14px rgba(0,0,0,.35);
+  text-shadow:0 2px 0 rgba(0,0,0,.2),0 6px 14px rgba(0,0,0,.35);
   position:sticky;
   top:0;
   z-index:20;
@@ -50,12 +48,12 @@ header{
 .top-controls{
   position:relative;
   max-width:1280px;
-  margin:10px auto 6px;
+  margin:10px auto 10px;
   padding:0 20px;
-  height:56px;
+  min-height:56px;
 }
 
-/* 戻るボタン */
+/* 戻るボタン（左） */
 .back{
   position:absolute;
   left:20px;
@@ -72,13 +70,11 @@ header{
   box-shadow:0 6px 14px rgba(0,0,0,.25);
 }
 
-/* 翻訳ボタン */
+/* 翻訳バー（中央） */
 .translate-bar{
-  position:absolute;
-  left:50%;
-  top:0;
-  transform:translateX(-50%);
   display:flex;
+  justify-content:center;
+  flex-wrap:wrap;
   gap:8px;
 }
 .translate-bar button{
@@ -86,8 +82,8 @@ header{
   color:#fff;
   border:none;
   border-radius:999px;
-  padding:14px 22px;
-  font-size:15px;
+  padding:12px 20px;
+  font-size:14px;
   font-weight:700;
   cursor:pointer;
   box-shadow:0 4px 10px rgba(0,0,0,.22);
@@ -103,10 +99,9 @@ header{
 /* ===== 商品一覧 ===== */
 .choice-list{
   display:grid;
-  grid-template-columns:repeat(6,1fr);
+  grid-template-columns:repeat(5,1fr);
   gap:16px;
 }
-
 .choice{
   background:var(--card);
   border-radius:18px;
@@ -117,7 +112,6 @@ header{
   opacity:0;
   transform:scale(.9);
 }
-
 .choice.show{
   animation:spread .45s ease forwards;
 }
@@ -125,7 +119,10 @@ header{
   from{opacity:0;transform:scale(.9)}
   to{opacity:1;transform:scale(1)}
 }
-
+.choice:hover{
+  transform:translateY(-4px);
+  box-shadow:0 16px 36px rgba(0,0,0,.24);
+}
 .choice img{
   width:100%;
   height:110px;
@@ -134,51 +131,28 @@ header{
   border-radius:12px;
 }
 
-.choice .noimg{
-  height:110px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  background:#f5f1e6;
-  border-radius:12px;
-  color:#7b5a2e;
-  font-weight:600;
-}
-
 /* ===== 比較 ===== */
 .compare{display:none}
 .compare-row{
   display:grid;
   grid-template-columns:1fr 1fr;
-  gap:8px;
+  gap:12px;
   margin-top:20px;
 }
-
 .box{
   background:#fff;
   border-radius:20px;
-  padding:18px;
+  padding:20px;
   box-shadow:0 12px 30px rgba(0,0,0,.25);
 }
-
-.from-center-left{
-  animation:fromCenterLeft .4s ease forwards;
-}
-.from-center-right{
-  animation:fromCenterRight .4s ease forwards;
-}
-@keyframes fromCenterLeft{
-  from{opacity:0;transform:translateX(0)}
-  to{opacity:1;transform:translateX(-12px)}
-}
-@keyframes fromCenterRight{
-  from{opacity:0;transform:translateX(0)}
-  to{opacity:1;transform:translateX(12px)}
-}
+.from-center-left{animation:fromCenterLeft .4s ease forwards;}
+.from-center-right{animation:fromCenterRight .4s ease forwards;}
+@keyframes fromCenterLeft{from{opacity:0}to{opacity:1;transform:translateX(-12px)}}
+@keyframes fromCenterRight{from{opacity:0}to{opacity:1;transform:translateX(12px)}}
 
 .box-inner{
   display:flex;
-  gap:14px;
+  gap:16px;
 }
 .box img{
   width:160px;
@@ -187,17 +161,32 @@ header{
   background:#f5f1e6;
   border-radius:14px;
 }
+.box h3{
+  margin:0 0 6px;
+  font-size:20px;
+}
 .box p{
-  white-space:pre-wrap;
+  margin:0;
   line-height:1.7;
+  font-size:15px;
+}
+.box p b{
+  color:#6f4f24;
 }
 
-/* ===== フェード ===== */
-.fade-out{
-  animation:fadeOut .35s ease forwards;
+/* 戻る時のフェードアウト */
+.fade-out{animation:fadeOut .35s ease forwards;}
+@keyframes fadeOut{to{opacity:0}}
+
+/* レスポンシブ */
+@media(max-width:1100px){
+  .choice-list{grid-template-columns:repeat(3,1fr)}
 }
-@keyframes fadeOut{
-  to{opacity:0}
+@media(max-width:640px){
+  .choice-list{grid-template-columns:repeat(2,1fr)}
+  .compare-row{grid-template-columns:1fr}
+  .box-inner{flex-direction:column}
+  .box img{width:100%;height:180px}
 }
 </style>
 </head>
@@ -208,12 +197,15 @@ header{
 
 <div class="top-controls">
   <button class="back" id="backBtn" onclick="back()">戻る</button>
+
   <div class="translate-bar">
     <button onclick="changeLang('ja')">日本語</button>
     <button onclick="changeLang('en')">English</button>
     <button onclick="changeLang('zh-CN')">中文</button>
     <button onclick="changeLang('ko')">한국어</button>
     <button onclick="changeLang('vi')">Tiếng Việt</button>
+    <button onclick="changeLang('th')">ไทย</button>
+    <button onclick="changeLang('tl')">Filipino</button>
   </div>
 </div>
 
@@ -224,9 +216,11 @@ header{
 
   <div id="compare" class="compare">
     <div class="compare-row">
+
+      <!-- 左：選択商品 -->
       <div class="box from-center-left">
         <div class="box-inner">
-          <img id="selImg">
+          <img id="selImg" alt="">
           <div>
             <h3 id="selTitle"></h3>
             <p id="selDesc"></p>
@@ -234,100 +228,172 @@ header{
         </div>
       </div>
 
+      <!-- 右：薬日本堂（固定） -->
       <div class="box from-center-right">
         <div class="box-inner">
-          <img src="https://github.com/mtdyt0409-del/shinnakamise/blob/main/%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89.jpg?raw=true">
+          <img src="https://github.com/mtdyt0409-del/shinnakamise/blob/main/%E3%83%80%E3%82%A6%E3%83%B3%E3%83%AD%E3%83%BC%E3%83%89.jpg?raw=true" alt="">
           <div>
-            <h3>薬日本堂 納豆キナーゼ10000FU</h3>
+            <h3>【薬日本堂】納豆キナーゼ10000FU</h3>
             <p>
-内容量: 90粒(30日分)
-1日目安量（3粒）あたり10000FU
-販売価格:（税抜）20,000円
-配合成分:納豆菌培養エキス末（国産ナットウキナーゼ）、ルンブルクス末、ケイヒ末、ハトムギ末、ヒュウガトウキ茎葉末、リュウガンニクエキス末
-特徴:国産ナットウキナーゼ＋ルンブルクス配合。血栓の原因物質であるフィブリンを溶解する納豆キナーゼとルンブルクスが配合されている。納豆キナーゼは胃酸に弱いため、耐酸性カプセルを使用し吸収をサポートしている。血液を固める作用があるビタミンK2を除去しているため、優れた血栓溶解作用が期待できる。
-国産ナットウキナーゼとルンブルクスを配合。
+<b>内容量：</b>90粒(30日分)<br>
+<b>1日目安量：</b>3粒あたり10000FU<br>
+<b>販売価格：</b>税抜20,000円（約667円/日）<br>
+<b>特徴：</b>血栓の原因物質であるフィブリンを溶解する国産納豆キナーゼとルンブルクスが配合されている。耐酸性カプセルを採用しているためきゅうしゅう血液を固める作用があるビタミンK2を除去しているため、優れた血栓溶解作用が期待できる。<br>
+<b>配合成分：</b>納豆菌培養エキス末（国産）、ルンブルクス末、ケイヒ末、ハトムギ末、ヒュウガトウキ茎葉末、リュウガンニクエキス末
             </p>
           </div>
         </div>
       </div>
+
     </div>
   </div>
 </div>
 
 <script>
+/* ===== スマホアクセス不可（bodyが存在してから判定する） ===== */
+(function(){
+  const isMobileUA = /iPhone|Android.*Mobile/i.test(navigator.userAgent);
+  const isSmall = window.innerWidth < 768;
+  if(isMobileUA && isSmall){
+    document.body.innerHTML = `
+      <div style="
+        min-height:100vh;display:flex;align-items:center;justify-content:center;
+        background:#f3efe4;font-family:'Hiragino Sans','Yu Gothic',sans-serif;
+        text-align:center;padding:24px;">
+        <div style="
+          background:#fff;border-radius:20px;padding:28px;max-width:420px;
+          box-shadow:0 12px 30px rgba(0,0,0,.25);">
+          <h2 style="margin:0 0 12px;">閲覧制限</h2>
+          <p style="margin:0;line-height:1.7;">
+            このページはスマートフォンでは閲覧できません。<br>
+            <b>PCまたはタブレットでのみ閲覧可能</b>です。
+          </p>
+        </div>
+      </div>
+    `;
+  }
+})();
+
+/* ===== 商品データ ===== */
 const products=[
-{title:"野口サプリ 納豆キナーゼHQ",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/HQ.jpg?raw=true",desc:`内容量:120粒（30日分）
-1日目安量（4粒）あたり4000FU
-販売価格:（税抜）5,980円`},
-
-{title:"野口サプリ 納豆キナーゼEX",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/natto-kinase-ex_hako.jpg?raw=true",desc:`内容量:90粒（30日分）
-1日目安量（3粒）あたり3000FU`},
-
-{title:"野口サプリ 納豆キナーゼ",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/normal.jpg?raw=true",desc:`内容量:60粒（30日分）
-1日目安量（2粒）あたり2000FU`},
-
-{title:"オリヒロ ナットウキナーゼ",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/orihiro2000.jpg?raw=true",desc:`内容量:60粒（20日分）
-1日目安量（3粒）あたり2000FU`},
-
-{title:"オリヒロ ナットウキナーゼ4000",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/orihiro4000.jpg?raw=true",desc:`内容量:60粒（30日分）
-1日目安量（2粒）あたり4000FU`},
-
-{title:"小林製薬 ナットウキナーゼ EPA DHA",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/EPADHA.jpg?raw=true",desc:`内容量:30粒（30日分）
-1日目安量（1粒）あたり2000FU`},
-
-{title:"小林製薬 ナットウキナーゼ さらさら粒",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/sarasara.jpg?raw=true",desc:`内容量:60粒（30日分）
-1日目安量（2粒）あたり2000FU`},
-
-{title:"小林製薬 ナットウキナーゼ 中性脂肪",img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/tyuuseisibou.jpg?raw=true",desc:`内容量:120粒（20日分）
-1日目安量（6粒）あたり2000FU`},
-
-/* product9 */
-{title:"【Hongo】納豆キナーゼ10000FU-S",img:"https://github.com/mtdyt0409-del/natto/blob/main/image.jpeg?raw=true",desc:`商品名:【Hongo】納豆キナーゼ10000FU-S
-内容量:90粒（30日分）
-1日目安量（3粒）あたり5000FU
-販売価格:（税抜）16,800円
-配合成分:
-納豆菌培養エキス末、DHA含有精製魚油加工食品、乾燥酵母、難消化性デキストリン、澱粉
-特徴:
-特許手法によりビタミンK₂を除去。`},
-
-/* product10 */
-{title:"【明治試薬】納豆キナーゼ 5000FU",img:"https://github.com/mtdyt0409-del/natto/blob/main/81dkXNI9fEL._AC_SL1500_.jpg?raw=true",desc:`商品名:【明治試薬】納豆キナーゼ 5000FU
-内容量:90粒（30日分）
-1日目安量（3粒）あたり5000FU
-販売価格:（税抜）12,778円
-配合成分:
-納豆菌培養エキス末、黒大豆ポリフェノール、ヒハツエキス、デキストリン
-特徴:
-納豆キナーゼを主軸に、DHA/EPA・GABAを組み合わせて配合。`},
-
-{title:"準備中",img:"",desc:"準備中"},
-{title:"準備中",img:"",desc:"準備中"}
+  {
+    title:"【野口サプリ】納豆キナーゼHQ",
+    img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/HQ.jpg?raw=true",
+    desc:`<b>内容量：</b>120粒(30日分)<br>
+<b>1日目安量：</b>4粒あたり4000FU<br>
+<b>販売価格：</b>税抜5,980円<br>
+<b>特徴：</b>ナットウキナーゼを4,000FU摂りたい方におすすめ。<br>
+<b>配合成分：</b>アマニ油（ベルギー製造）、ナットウキナーゼ含有納豆菌培養エキス、でん粉、タマネギ外皮エキス、ビール酵母、黒コショウ抽出物`
+  },
+  {
+    title:"【野口サプリ】納豆キナーゼEX",
+    img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/natto-kinase-ex_hako.jpg?raw=true",
+    desc:`<b>内容量：</b>90粒(30日分)<br>
+<b>1日目安量：</b>3粒あたり3000FU<br>
+<b>販売価格：</b>税抜4,980円<br>
+<b>特徴：</b>ビタミンKを除去。<br>
+<b>配合成分：</b>ナットウキナーゼ含有納豆菌培養エキス末、ビール酵母、黒コショウエキス末、ケルセチン含有タマネギ外皮エキス末`
+  },
+  {
+    title:"【野口サプリ】納豆キナーゼ",
+    img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/normal.jpg?raw=true",
+    desc:`<b>内容量：</b>60粒(30日分)<br>
+<b>1日目安量：</b>2粒あたり2000FU<br>
+<b>販売価格：</b>税抜3,980円<br>
+<b>特徴：</b>定番タイプ。<br>
+<b>配合成分：</b>トウモロコシデンプン（国内製造）、マルトデキストリン、ナットウキナーゼ含有納豆菌培養エキス末、ビール酵母、黒コショウエキス末、ケルセチン含有タマネギ外皮エキス末`
+  },
+  {
+    title:"【オリヒロ】ナットウキナーゼ",
+    img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/orihiro2000.jpg?raw=true",
+    desc:`<b>内容量：</b>60粒(20日分)<br>
+<b>1日目安量：</b>3粒あたり2000FU<br>
+<b>販売価格：</b>税抜3,000円<br>
+<b>特徴：</b>納豆特有の臭いを抑えたソフトカプセル。<br>
+<b>配合成分：</b>大豆油（国内製造）、納豆菌培養エキス末、ゼラチン、グリセリン、グリセリン脂肪酸エステル、ミツロウ、レシチン、ウコン色素`
+  },
+  {
+    title:"【オリヒロ】ナットウキナーゼ4000",
+    img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/orihiro4000.jpg?raw=true",
+    desc:`<b>内容量：</b>60粒(30日分)<br>
+<b>1日目安量：</b>2粒あたり4000FU<br>
+<b>販売価格：</b>税抜4,000円<br>
+<b>特徴：</b>DHA・EPA等も配合し生活習慣が気になる方をサポート。<br>
+<b>配合成分：</b>納豆菌培養エキス末（台湾製造）、DHA含有精製魚油、サフラワー油、GABA、ビタミンE含有植物油／加工デンプン、グリセリン、ゲル化剤（増粘多糖類）、乳化剤、ミツロウ、レシチン、ルチン、カカオ色素、ヘスペリジン`
+  },
+  {
+    title:"【小林製薬】ナットウキナーゼ EPA DHA",
+    img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/EPADHA.jpg?raw=true",
+    desc:`<b>内容量：</b>30粒(30日分)<br>
+<b>1日目安量：</b>1粒あたり2000FU<br>
+<b>販売価格：</b>税抜2,625円<br>
+<b>特徴：</b>ナットウキナーゼ・EPA・DHAを摂取できる。<br>
+<b>配合成分：</b>ゼラチン、DHA含有精製魚油、難消化性デキストリン、ナットウキナーゼ含有納豆菌培養エキス（大豆を含む）、玉ねぎ、大豆油、EPA含有精製魚油／グリセリン、酵素処理ルチン、ミツロウ、グリセリン脂肪酸エステル、レシチン（大豆由来）、フィチン酸、酸化防止剤（ビタミンE）、微粒酸化ケイ素`
+  },
+  {
+    title:"【小林製薬】ナットウキナーゼ さらさら粒",
+    img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/sarasara.jpg?raw=true",
+    desc:`<b>内容量：</b>60粒(30日分)<br>
+<b>1日目安量：</b>2粒あたり2000FU<br>
+<b>販売価格：</b>税抜2,625円<br>
+<b>特徴：</b>末梢の血流改善を通じて血圧低下をサポート。<br>
+<b>配合成分：</b>ゼラチン（国内製造）、DHA含有精製魚油、大豆油、イワシペプチド、杜仲葉エキス、ナットウキナーゼ含有納豆菌培養エキス（大豆を含む）、難消化性デキストリン、EPA含有精製魚油、玉ねぎ ほか`
+  },
+  {
+    title:"【小林製薬】ナットウキナーゼ さらさら粒 PREMIUM",
+    img:"https://github.com/mtdyt0409-del/shinnakamise/blob/main/tyuuseisibou.jpg?raw=true",
+    desc:`<b>内容量：</b>120粒(20日分)<br>
+<b>1日目安量：</b>6粒あたり2000FU<br>
+<b>販売価格：</b>税抜2,940円<br>
+<b>特徴：</b>EPA・DHA・ビタミンC/E等を高配合し血圧低下をサポート。<br>
+<b>配合成分：</b>EPA・DHA含有精製魚油（国内製造）、ゼラチン、大豆油、ナットウキナーゼ含有納豆菌培養エキス（大豆を含む）、難消化性デキストリン、ビタミンE含有植物油、グリセリン、ミツロウ、グリセリン脂肪酸エステル、ビタミンC、フィチン酸、酸化防止剤（ビタミンE）`
+  },
+  {
+    title:"【Hongo】納豆キナーゼ10000FU-S",
+    img:"https://github.com/mtdyt0409-del/natto/blob/main/image.jpeg?raw=true",
+    desc:`<b>内容量：</b>90粒(30日分)<br>
+<b>1日目安量：</b>3粒あたり5000FU<br>
+<b>販売価格：</b>税抜16,800円<br>
+<b>特徴：</b>特許手法によりビタミンK₂を除去。<br>
+<b>配合成分：</b>納豆菌培養エキス末、DHA含有精製魚油加工食品、乾燥酵母、難消化性デキストリン、澱粉/ゼラチン、ステアリン酸Ca`
+  },
+  {
+    title:"【明治試薬】納豆キナーゼ 5000FU",
+    img:"https://github.com/mtdyt0409-del/natto/blob/main/81dkXNI9fEL._AC_SL1500_.jpg?raw=true",
+    desc:`<b>内容量：</b>90粒(30日分)<br>
+<b>1日目安量：</b>3粒あたり5000FU<br>
+<b>販売価格：</b>税抜12,778円<br>
+<b>特徴：</b>納豆キナーゼを主軸としつつ、現代人の健康維持に役立つDHA/EPAや、ストレス対策に役立つGABAを組み合わせて配合。<br>
+<b>配合成分：</b>納豆菌培養エキス末、黒大豆ポリフェノール、ヒハツエキス、デキストリン／HPMC、ステアリン酸Ca、着色料（酸化チタン）`
+  }
 ];
 
-const list=document.getElementById("list");
-const compare=document.getElementById("compare");
-const backBtn=document.getElementById("backBtn");
+/* ===== DOM取得（ここを明示するのが重要） ===== */
+const list = document.getElementById("list");
+const compare = document.getElementById("compare");
+const backBtn = document.getElementById("backBtn");
+const selImg = document.getElementById("selImg");
+const selTitle = document.getElementById("selTitle");
+const selDesc = document.getElementById("selDesc");
 
+/* ===== 一覧生成（表示アニメ維持） ===== */
 products.forEach((p,i)=>{
   const d=document.createElement("div");
   d.className="choice";
-  d.style.animationDelay=`${i*40}ms`;
-  d.innerHTML=p.img
-    ? `<img src="${p.img}"><p>${p.title}</p>`
-    : `<div class="noimg">準備中</div><p>${p.title}</p>`;
+  d.innerHTML = `<img src="${p.img}" alt=""><p>${p.title}</p>`;
   d.onclick=()=>{
-    selImg.src=p.img||"";
-    selTitle.innerText=p.title;
-    selDesc.innerText=p.desc;
+    selImg.src = p.img;
+    selTitle.innerText = p.title;
+    selDesc.innerHTML = p.desc; /* ← HTML表示 */
     list.style.display="none";
     compare.style.display="block";
     backBtn.style.display="block";
   };
   list.appendChild(d);
-  setTimeout(()=>d.classList.add("show"),50);
+  setTimeout(()=>d.classList.add("show"), i*40);
 });
 
+/* ===== 戻る（フェードアウト→一覧に戻す） ===== */
 function back(){
   compare.classList.add("fade-out");
   setTimeout(()=>{
@@ -335,13 +401,20 @@ function back(){
     compare.classList.remove("fade-out");
     list.style.display="grid";
     backBtn.style.display="none";
+
+    /* 一覧の再アニメーション */
+    document.querySelectorAll(".choice").forEach((c,i)=>{
+      c.classList.remove("show");
+      setTimeout(()=>c.classList.add("show"), i*40);
+    });
   },350);
 }
 
+/* ===== Google翻訳 ===== */
 function googleTranslateElementInit(){
   new google.translate.TranslateElement({
     pageLanguage:'ja',
-    includedLanguages:'ja,en,zh-CN,ko,vi',
+    includedLanguages:'ja,en,zh-CN,ko,vi,th,tl',
     autoDisplay:false
   }, 'google_translate_element');
 }
